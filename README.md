@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/readme-now-playing.png" alt="Noir playing On The Floor, with the lyrics beside the cover and the pixel note on the lyric line" width="100%">
+
 # Noir
 
 **YouTube Music, your music files, and your music server. Native on Linux.**
