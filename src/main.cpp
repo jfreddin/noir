@@ -2,7 +2,11 @@
 #include "rowselection.h"
 #include "desktoptheme.h"
 #include "freedmemory.h"
+#ifdef Q_OS_LINUX
 #include "mpris.h"
+#else
+#include "nowplaying.h"
+#endif
 #include "roundedart.h"
 #include "gamepad.h"
 #include "motionbackdrop.h"
@@ -191,7 +195,11 @@ int main(int argc, char **argv) {
 #ifdef NOIR_DIAGNOSTICS
   exposeMpris = exposeMpris || args.contains("--mpris-test");
 #endif
+#ifdef Q_OS_LINUX
   if (exposeMpris) registerMpris(&backend);
+#else
+  if (exposeMpris) registerNowPlaying(&backend);
+#endif
   engine.rootContext()->setContextProperty("windowResources", &windowResources);
   engine.addImageProvider("symbols", new Symbols);
   engine.rootContext()->setContextProperty("app", &backend);

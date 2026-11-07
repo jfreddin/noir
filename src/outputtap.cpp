@@ -48,6 +48,11 @@ OutputTap::~OutputTap() {
 }
 
 void OutputTap::start() {
+#ifndef Q_OS_LINUX
+  // parec records from PulseAudio, which macOS does not have. Until a CoreAudio
+  // tap takes its place, the visualizer and playing bars stay still on macOS.
+  return;
+#endif
   m_pending.clear();
   // NOIR_OUTPUT_TAP stands in for parec in the tests, where no speaker plays.
   const auto program = qEnvironmentVariable("NOIR_OUTPUT_TAP", "parec");

@@ -1,4 +1,5 @@
 #include "subsonic.h"
+#include "keyring.h"
 #include "lrc.h"
 #include <QBuffer>
 #include <QCryptographicHash>
@@ -67,39 +68,11 @@ Subsonic::Subsonic(QObject *parent, bool restore) : QObject(parent) {
 }
 Subsonic::~Subsonic() { stopRequests(); }
 bool Subsonic::keyringAvailable() const {
-  return !QStandardPaths::findExecutable("secret-tool").isEmpty();
+  return keyring::available();
 }
 void Subsonic::secret(const QStringList &args, const QByteArray &input,
                       std::function<void(bool, QByteArray)> callback) {
-  if (!keyringAvailable()) {
-    callback(false, {});
-    return;
-  }
-  auto p = new QProcess(this);
-  auto timer = new QTimer(p);
-  timer->setSingleShot(true);
-  auto done = std::make_shared<bool>(false);
-  auto finish = [p, done, callback](bool ok) {
-    if (*done)
-      return;
-    *done = true;
-    callback(ok, p->readAllStandardOutput());
-    p->deleteLater();
-  };
-  connect(p, &QProcess::errorOccurred, this,
-          [finish](QProcess::ProcessError e) {
-            if (e == QProcess::FailedToStart)
-              finish(false);
-          });
-  connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
-          [finish](int code, QProcess::ExitStatus s) {
-            finish(code == 0 && s == QProcess::NormalExit);
-          });
-  connect(timer, &QTimer::timeout, p, [p] { p->kill(); });
-  p->start("secret-tool", args);
-  p->write(input);
-  p->closeWriteChannel();
-  timer->start(15000);
+  keyring::run(this, args, input, std::move(callback));
 }
 void Subsonic::stopRequests() {
   ++m_generation;

@@ -1,4 +1,5 @@
 #include "playbacknotifier.h"
+#ifdef Q_OS_LINUX
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCallWatcher>
@@ -42,3 +43,22 @@ void PlaybackNotifier::flush() {
     m_pending=false;call->deleteLater();flush();
   });
 }
+#elif defined(Q_OS_MACOS)
+// Notification Center, through osascript. It needs no app bundle or entitlement,
+// and the notification cannot be recalled, so clear() and the closed signal do nothing.
+#include <QProcess>
+PlaybackNotifier::PlaybackNotifier(QObject *parent) : QObject(parent) {}
+void PlaybackNotifier::show(const QString &title, const QString &artist) {
+  if (title.isEmpty())
+    return;
+  auto quote = [](QString text) {
+    return text.left(200).replace('\\', "\\\\").replace('"', "\\\"");
+  };
+  // The track title leads and the artist goes below it, as on Linux.
+  const QString script = QStringLiteral("display notification \"%1\" with title \"%2\"")
+                             .arg(quote(artist), quote(title));
+  QProcess::startDetached("osascript", {"-e", script});
+}
+void PlaybackNotifier::clear() {}
+void PlaybackNotifier::notificationClosed(uint, uint) {}
+#endif

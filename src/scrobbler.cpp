@@ -1,4 +1,5 @@
 #include "scrobbler.h"
+#include "keyring.h"
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -54,7 +55,7 @@ Scrobbler::~Scrobbler() {
 }
 
 bool Scrobbler::keyringAvailable() const {
-  return !QStandardPaths::findExecutable("secret-tool").isEmpty();
+  return keyring::available();
 }
 
 qint64 Scrobbler::thresholdFor(qint64 durationMs) {
@@ -271,32 +272,5 @@ void Scrobbler::setStatus(const QString &value) {
 
 void Scrobbler::secret(const QStringList &args, const QByteArray &input,
                        std::function<void(bool, QByteArray)> callback) {
-  if (!keyringAvailable()) {
-    callback(false, {});
-    return;
-  }
-  auto *process = new QProcess(this);
-  auto *timer = new QTimer(process);
-  timer->setSingleShot(true);
-  auto done = std::make_shared<bool>(false);
-  auto finish = [process, done, callback](bool ok) {
-    if (*done)
-      return;
-    *done = true;
-    callback(ok, process->readAllStandardOutput());
-    process->deleteLater();
-  };
-  connect(process, &QProcess::errorOccurred, this, [finish](QProcess::ProcessError e) {
-    if (e == QProcess::FailedToStart)
-      finish(false);
-  });
-  connect(process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
-          [finish](int code, QProcess::ExitStatus status) {
-            finish(code == 0 && status == QProcess::NormalExit);
-          });
-  connect(timer, &QTimer::timeout, process, [process] { process->kill(); });
-  process->start("secret-tool", args);
-  process->write(input);
-  process->closeWriteChannel();
-  timer->start(15000);
+  keyring::run(this, args, input, std::move(callback));
 }
