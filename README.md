@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/readme-now-playing.png" alt="Noir playing a song, the cover in a flower shape ringed by the visualizer" width="100%">
+<img src="assets/readme-now-playing.png" alt="Noir playing On The Floor, with the lyrics beside the cover and the pixel note on the lyric line" width="100%">
 
 # Noir
 
