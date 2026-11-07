@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Noir
+Comment=YouTube Music, native on Linux
+Exec=noir %u
+Icon=noir
+Terminal=false
+Categories=AudioVideo;Audio;Player;
+StartupWMClass=noir
+MimeType=x-scheme-handler/noir;
