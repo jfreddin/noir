@@ -191,7 +191,7 @@ comment next to the code it governs, where the next person will actually find
 it, not in a log entry they would have to go looking for.
 
 No co-author trailers and no generated-by lines. Author with the noreply
-address, never a personal one: `yappologistic@users.noreply.github.com`.
+address, never a personal one: `73734958+jfreddin@users.noreply.github.com`.
 
 Session names, session IDs and session URLs (anything under
 `claude.ai/code`) never go into a commit, a pull request title or

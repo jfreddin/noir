@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="assets/readme-now-playing.png" alt="Noir playing On The Floor, with the lyrics beside the cover and the pixel note on the lyric line" width="100%">
-
 # Noir
 
 **YouTube Music, your music files, and your music server. Native on Linux.**
@@ -292,8 +290,4 @@ The server binds to loopback only and stops after testing. Test data and credent
 
 [MIT](LICENSE). Material Symbols are licensed under Apache-2.0; see [NOTICE](NOTICE) for third-party acknowledgments. Noir is an independent project and is not affiliated with Google or YouTube.
 
-## Credits
-
-Noir began as a fork of [Sung](https://github.com/yappologistic/Sung) by
-yappologistic, and it is now a separate project. It keeps Sung's licence; see
-LICENSE and NOTICE.
+Noir began as a fork of [Sung](https://github.com/yappologistic/Sung).
