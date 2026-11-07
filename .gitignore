@@ -30,7 +30,7 @@
 !/tests/*.h
 !/tests/*.py
 /assets/*
-!/assets/readme-now-playing.png
+!/assets/noir-lyrics.png
 !/assets/noir.png
 !/assets/noir.desktop
 !/assets/icons/
